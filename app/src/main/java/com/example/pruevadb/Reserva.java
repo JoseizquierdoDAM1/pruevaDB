@@ -4,8 +4,10 @@ import java.io.Serializable;
 import java.util.Date;
 
 public class Reserva implements Serializable {
-    private String nombreUsuario;
 
+    private String idUsuario;
+    private String nombreUsuario;
+    private String idRestaurante;
     private String restaurante;
     private Date dia;
     private String turno;
@@ -15,7 +17,8 @@ public class Reserva implements Serializable {
     public Reserva() {
     }
 
-    public Reserva(String nombreUsuario, String restaurante, Date dia, String turno, String hora, int comensales) {
+    public Reserva(String idUsuario, String nombreUsuario, String restaurante, Date dia, String turno, String hora, int comensales) {
+        this.idUsuario = idUsuario;
         this.nombreUsuario = nombreUsuario;
         this.restaurante = restaurante;
         this.dia = dia;
@@ -70,5 +73,21 @@ public class Reserva implements Serializable {
 
     public void setRestaurante(String restaurante) {
         this.restaurante = restaurante;
+    }
+
+    public String getIdRestaurante() {
+        return idRestaurante;
+    }
+
+    public void setIdRestaurante(String idRestaurante) {
+        this.idRestaurante = idRestaurante;
+    }
+
+    public String getIdUsuario() {
+        return idUsuario;
+    }
+
+    public void setIdUsuario(String idUsuario) {
+        this.idUsuario = idUsuario;
     }
 }

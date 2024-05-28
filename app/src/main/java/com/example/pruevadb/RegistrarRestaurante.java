@@ -144,6 +144,7 @@ public class RegistrarRestaurante extends AppCompatActivity {
          r.setDniUsuario(usuario.getDni());
          r.setImagen(urlImagen);
          r.setComensales(Integer.valueOf(comensales.getText().toString()));
+         r.setValoracion(0);
          if(numturnos==1){
              r.setHorastdesayuno(horastdesalluno);
          }

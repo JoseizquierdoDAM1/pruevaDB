@@ -2,20 +2,27 @@ package com.example.pruevadb;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.GenericTypeIndicator;
 import com.google.firebase.database.ValueEventListener;
 
 import java.sql.Array;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
     private DatabaseReference mDatabase;
@@ -40,6 +47,7 @@ public class MainActivity extends AppCompatActivity {
 
                 for (DataSnapshot usuarioSnapshot : snapshot.getChildren()) {
                     // Obtener los datos del usuario del snapshot
+                    String id = usuarioSnapshot.child("id").getValue(String.class);
                     String nombre = usuarioSnapshot.child("nombreUsuario").getValue(String.class);
                     String correo = usuarioSnapshot.child("correo").getValue(String.class);
                     String contraseñaUsuario = usuarioSnapshot.child("contraseña").getValue(String.class);
@@ -47,11 +55,12 @@ public class MainActivity extends AppCompatActivity {
                     String dni=usuarioSnapshot.child("dni").getValue(String.class);
                     // Comparar el nombre de usuario y contraseña
                     if (labelnombre.getText().toString().equals(nombre) && contraseña.getText().toString().equals(contraseñaUsuario)) {
+                        Toast.makeText(MainActivity.this, nombre, Toast.LENGTH_SHORT).show();
                         usuarioEncontrado = true;
                         if (tipoUser.equals("dueño")) {
                             aviso.setText("El acceso es correcto para el usuario dueño");
                             Intent i = new Intent(MainActivity.this,verRestaurante.class);
-                            Usuario u = new Usuario( nombre,  correo,  contraseñaUsuario, dni,  tipoUser);
+                            Usuario u = new Usuario( id,nombre,  correo,  contraseñaUsuario, dni,  tipoUser);
                             i.putExtra("usuario", u);
 
                             startActivity(i);
@@ -79,4 +88,6 @@ public class MainActivity extends AppCompatActivity {
         Intent i = new Intent(MainActivity.this,RegistroUsuario.class);
         startActivity(i);
     }
+
+
 }
