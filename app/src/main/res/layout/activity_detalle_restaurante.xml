@@ -13,47 +13,42 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="178dp"
-            android:layout_weight="1"
-            android:orientation="vertical">
+            android:layout_height="115dp"
+            android:background="#4a59a0"
+            android:orientation="horizontal">
 
             <LinearLayout
-                android:layout_width="match_parent"
+                android:layout_width="599dp"
                 android:layout_height="match_parent"
-                android:orientation="horizontal">
+                android:layout_weight="1"
+                android:orientation="vertical">
 
-                <LinearLayout
-                    android:layout_width="633dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:orientation="vertical">
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
 
-                    <RelativeLayout
+                    <ImageView
+                        android:id="@+id/imageView"
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent">
+                        android:layout_height="match_parent"
+                        android:onClick="principal"
+                        app:srcCompat="@drawable/logo3" />
 
-                        <ImageView
-                            android:id="@+id/imageView"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            app:srcCompat="@drawable/aaaaa_logo1" />
-
-                        <TextView
-                            android:id="@+id/labelVerNombre"
-                            android:layout_width="157dp"
-                            android:layout_height="wrap_content"
-                            android:layout_alignParentEnd="true"
-                            android:layout_alignParentBottom="true"
-                            android:layout_marginEnd="44dp"
-                            android:layout_marginBottom="7dp"
-                            android:shadowColor="#FFFFFF"
-                            android:text="TextView"
-                            android:textColor="#FFFFFF" />
-                    </RelativeLayout>
-
-                </LinearLayout>
+                    <TextView
+                        android:id="@+id/labelVerNombre"
+                        android:layout_width="153dp"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentEnd="true"
+                        android:layout_alignParentBottom="true"
+                        android:layout_marginEnd="62dp"
+                        android:layout_marginBottom="6dp"
+                        android:shadowColor="#FFFFFF"
+                        android:text="TextView"
+                        android:textColor="#FFFFFF" />
+                </RelativeLayout>
 
             </LinearLayout>
+
         </LinearLayout>
 
         <LinearLayout

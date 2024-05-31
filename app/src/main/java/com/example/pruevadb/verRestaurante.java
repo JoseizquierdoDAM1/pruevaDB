@@ -84,6 +84,7 @@ public class verRestaurante extends AppCompatActivity {
                 }
                 RecyclerView recyclerView = findViewById(R.id.recyclerDetalleRestaurante);
                 RestauranteAdapter adapter = new RestauranteAdapter(getApplicationContext(), restaurantes);
+
                 adapter.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {

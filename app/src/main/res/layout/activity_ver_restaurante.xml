@@ -15,6 +15,7 @@
             android:layout_width="match_parent"
             android:layout_height="184dp"
             android:layout_weight="1"
+            android:background="#4a59a0"
             android:orientation="vertical">
 
             <LinearLayout
@@ -23,20 +24,20 @@
                 android:orientation="horizontal">
 
                 <LinearLayout
-                    android:layout_width="633dp"
+                    android:layout_width="607dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:orientation="vertical">
 
                     <RelativeLayout
-                        android:layout_width="match_parent"
+                        android:layout_width="304dp"
                         android:layout_height="match_parent">
 
                         <ImageView
                             android:id="@+id/imageView"
                             android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            app:srcCompat="@drawable/aaaaa_logo1" />
+                            android:layout_height="match_parent"
+                            app:srcCompat="@drawable/logo3" />
 
                         <TextView
                             android:id="@+id/labelVerNombre"
@@ -65,8 +66,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:onClick="añadirRestaurante"
-                        android:textAlignment="center"
-                        app:srcCompat="@drawable/mas__4_" />
+                        app:srcCompat="@drawable/a_adir" />
                 </LinearLayout>
             </LinearLayout>
         </LinearLayout>
