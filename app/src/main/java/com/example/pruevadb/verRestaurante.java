@@ -7,8 +7,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.annotation.SuppressLint;
-import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -22,22 +20,7 @@ import com.google.firebase.database.GenericTypeIndicator;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.GenericTypeIndicator;
-import com.google.firebase.database.ValueEventListener;
-
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Locale;
-
-import java.util.ArrayList;
-import java.util.List;
 
 
 public class verRestaurante extends AppCompatActivity {
@@ -71,19 +54,21 @@ public class verRestaurante extends AppCompatActivity {
                     // Obtener los datos del restaurante del snapshot
                     String id = restauranteSnapshot.child("id").getValue(String.class);
                     String nombre = restauranteSnapshot.child("nombre").getValue(String.class);
+                    String comunidadA = restauranteSnapshot.child("comunidadaAutonoma").getValue(String.class);
+                    String provincia = restauranteSnapshot.child("provincia").getValue(String.class);
                     String ciudad = restauranteSnapshot.child("ciudad").getValue(String.class);
                     String tipo = restauranteSnapshot.child("tipo").getValue(String.class);
                     String dniUsuario = restauranteSnapshot.child("dniUsuario").getValue(String.class);
                     String imageUrl = restauranteSnapshot.child("imagen").getValue(String.class);
-                    GenericTypeIndicator<ArrayList<Reserva>> genericTypeIndicator = new GenericTypeIndicator<ArrayList<Reserva>>() {};
-                    ArrayList<Reserva> reservas = restauranteSnapshot.child("reservas").getValue(genericTypeIndicator);
+                    int valoracion= restauranteSnapshot.child("valoracion").getValue(Integer.class);
                     int comensales=restauranteSnapshot.child("comensales").getValue(Integer.class);
 
-                    Restaurante r = new Restaurante(id,nombre, ciudad, tipo, dniUsuario, imageUrl,comensales,reservas);
+                    Restaurante r = new Restaurante(id,nombre,  tipo,comunidadA,provincia,ciudad, dniUsuario, imageUrl,comensales,valoracion);
                     restaurantes.add(r);
                 }
-                RecyclerView recyclerView = findViewById(R.id.recyclerDetalleRestaurante);
-                RestauranteAdapter adapter = new RestauranteAdapter(getApplicationContext(), restaurantes);
+                RecyclerView recyclerView = findViewById(R.id.recyclermenuReseñas);
+                RestauranteAdapter adapter = new RestauranteAdapter(getApplicationContext(), restaurantes,usuario);
+                recyclerView.addItemDecoration(new SpaceItemDecoration(70));
 
                 adapter.setOnClickListener(new View.OnClickListener() {
                     @Override

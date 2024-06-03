@@ -4,9 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
 import android.widget.Toast;
 
 import com.google.firebase.database.DataSnapshot;
@@ -36,10 +34,8 @@ public class DetalleRestaurante extends AppCompatActivity {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 List<Reserva> reservas = new ArrayList<>();
-                String id=" ";
                 for (DataSnapshot restauranteSnapshot : dataSnapshot.getChildren()) {
                     // Obtener los datos del restaurante del snapshot
-                     id = restauranteSnapshot.child("id").getValue(String.class);
                     GenericTypeIndicator<ArrayList<Reserva>> genericTypeIndicator = new GenericTypeIndicator<ArrayList<Reserva>>() {};
                     List<Reserva> reservasRestaurante = restauranteSnapshot.child("reservas").getValue(genericTypeIndicator);
                     if (reservasRestaurante != null) {
@@ -56,8 +52,9 @@ public class DetalleRestaurante extends AppCompatActivity {
                 });
 
                 // Inicializar el RecyclerView y configurar el adaptador
-                RecyclerView recyclerView = findViewById(R.id.recyclerDetalleRestaurante);
-                DetalleRestauranteAdapter adapter = new DetalleRestauranteAdapter(DetalleRestaurante.this, reservas,id);
+                RecyclerView recyclerView = findViewById(R.id.recyclermenuReseñas);
+                DetalleRestauranteAdapter adapter = new DetalleRestauranteAdapter(DetalleRestaurante.this, reservas);
+                recyclerView.addItemDecoration(new SpaceItemDecoration(70));
                 recyclerView.setLayoutManager(new LinearLayoutManager(DetalleRestaurante.this));
                 recyclerView.setAdapter(adapter);
             }

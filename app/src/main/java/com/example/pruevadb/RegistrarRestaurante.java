@@ -4,10 +4,12 @@ package com.example.pruevadb;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.Spinner;
@@ -15,17 +17,25 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.FirebaseApp;
+import com.google.firebase.FirebaseOptions;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
-import org.w3c.dom.Text;
-
 import java.util.ArrayList;
 
 public class RegistrarRestaurante extends AppCompatActivity {
+
+    private String comunidadAutonoma;
+    private String provincia;
+    private String ciudad;
     private Button mUploadBtn;
     private StorageReference mStorage;
     private Usuario usuario;
@@ -45,6 +55,7 @@ public class RegistrarRestaurante extends AppCompatActivity {
     private ArrayList <String>turnos= new ArrayList<>();
 
     private static  final int GALLERY_INTENT =1;
+    @SuppressLint("MissingInflatedId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -54,11 +65,10 @@ public class RegistrarRestaurante extends AppCompatActivity {
 
         Intent intent = getIntent();
         usuario = (Usuario) intent.getSerializableExtra("usuario");
-        botonGuaradarTurno=findViewById(R.id.button7);
+        botonGuaradarTurno=findViewById(R.id.guardarTurno);
         botonGuarRestaurante=findViewById(R.id.botonSubir);
-        botonsiguienteTurno=findViewById(R.id.button4);
+        botonsiguienteTurno=findViewById(R.id.button2);
 
-        botonGuarRestaurante.setEnabled(false);
         // Inicializar las listas
         horastdesalluno = new ArrayList<>();
         horastcomida = new ArrayList<>();
@@ -68,8 +78,228 @@ public class RegistrarRestaurante extends AppCompatActivity {
         data.add("Comida");
         data.add("Cena");
         rellenarSpinners();
+        rellenarCiudad();
+
+
 
     }
+
+    public void rellenarCiudad() {
+        FirebaseOptions options = new FirebaseOptions.Builder()
+                .setApiKey("AIzaSyC2BIa9iq_0bSgU11dORK9gS-DJ9k7QjSs")
+                .setApplicationId("1:783759569627:android:739fa870fce6e73274d2fe")
+                .setDatabaseUrl("https://ciudadesfinalrestaurante-default-rtdb.europe-west1.firebasedatabase.app/")
+                .build();
+
+        FirebaseApp secondApp = FirebaseApp.initializeApp(this, options, "second app");
+
+// Obtener la instancia de la segunda base de datos
+        FirebaseDatabase secondDatabase = FirebaseDatabase.getInstance(secondApp);
+
+// Hacer referencia al nodo "comunidades" en la segunda base de datos
+        // Define un ArrayList para almacenar las comunidades
+        ArrayList<CCA> comunidadesList = new ArrayList<>();
+
+// Obtener la referencia al nodo "comunidades" en la base de datos
+        // Define un ArrayList para almacenar los nombres de las comunidades
+        ArrayList<String> nombresComunidades = new ArrayList<>();
+
+// Obtener la referencia al nodo "comunidades" en la base de datos
+        DatabaseReference databaseReferenceRef = secondDatabase.getReference().child("comunidades");
+
+        databaseReferenceRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                // Iterar sobre los datos dentro del nodo "comunidades"
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                    // Obtener el nombre de cada comunidad
+                    String parentCode = snapshot.child("parent_code").getValue(String.class);
+                    String label = snapshot.child("label").getValue(String.class);
+                    String code = snapshot.child("code").getValue(String.class);
+
+                    // Crear un objeto Comunidad y agregarlo al ArrayList
+                    CCA comunidad = new CCA(code,parentCode, label);
+                    comunidadesList.add(comunidad);
+                    // Agregar el nombre al ArrayList de nombres de comunidades
+                    nombresComunidades.add(label);
+                }
+
+                // Ahora que tienes los nombres de las comunidades en el ArrayList, puedes poblar el Spinner
+                Spinner spinnerComunidades = findViewById(R.id.spinner_comunidades);
+
+// Crear un ArrayAdapter para el Spinner utilizando el ArrayList de nombres de comunidades
+                ArrayAdapter<String> adapter = new ArrayAdapter<>(RegistrarRestaurante.this, android.R.layout.simple_spinner_item, nombresComunidades);
+
+// Especificar el diseño del dropdown del Spinner
+                adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
+// Asignar el ArrayAdapter al Spinner
+                spinnerComunidades.setAdapter(adapter);
+
+// Agregar un listener al Spinner para detectar la selección de una comunidad
+                spinnerComunidades.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                    @Override
+                    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+
+                        // Obtener el nombre de la comunidad seleccionada
+                        String comunidadSeleccionada = nombresComunidades.get(position);
+
+                        comunidadAutonoma=comunidadSeleccionada;
+                        // Llamar al método provincias y pasar el nombre de la comunidad como argumento
+                        provincias(comunidadesList.get(position),secondDatabase);
+                    }
+
+                    @Override
+                    public void onNothingSelected(AdapterView<?> parent) {
+                        // Manejar el caso en el que no se seleccione ninguna comunidad
+                    }
+                });
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                // Manejar errores
+            }
+        });
+
+
+
+
+
+
+    }
+
+    public void provincias(CCA comunidadSeleccionada, FirebaseDatabase secondDatabase){
+
+        ArrayList<province> provinceList = new ArrayList<>();
+
+        // Obtener la referencia al nodo "comunidades" en la base de datos
+        // Define un ArrayList para almacenar los nombres de las comunidades
+        ArrayList<String> nombreProvince = new ArrayList<>();
+        DatabaseReference provinciasRef = secondDatabase.getReference().child("provincias");
+
+        Query query = provinciasRef.orderByChild("parent_code").equalTo(comunidadSeleccionada.getCode());
+
+        query.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                // Iterar sobre los datos de las provincias
+                for (DataSnapshot provinciaSnapshot : dataSnapshot.getChildren()) {
+                    // Obtener los datos de cada provincia
+                    String parentCode = provinciaSnapshot.child("parent_code").getValue(String.class);
+                    String label = provinciaSnapshot.child("label").getValue(String.class);
+                    String code = provinciaSnapshot.child("code").getValue(String.class);
+
+                    province p= new province(code,label,parentCode);
+                    provinceList.add(p);
+                    nombreProvince.add(label);
+
+                }
+                // Ahora que tienes los nombres de las comunidades en el ArrayList, puedes poblar el Spinner
+                Spinner spinnerComunidades = findViewById(R.id.spinner_provincias);
+
+// Crear un ArrayAdapter para el Spinner utilizando el ArrayList de nombres de comunidades
+                ArrayAdapter<String> adapter = new ArrayAdapter<>(RegistrarRestaurante.this, android.R.layout.simple_spinner_item, nombreProvince);
+
+// Especificar el diseño del dropdown del Spinner
+                adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
+// Asignar el ArrayAdapter al Spinner
+                spinnerComunidades.setAdapter(adapter);
+
+// Agregar un listener al Spinner para detectar la selección de una comunidad
+                spinnerComunidades.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                    @Override
+                    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                        // Obtener el nombre de la comunidad seleccionada
+                        String provinciaSeleccionada = nombreProvince.get(position);
+
+                        provincia=provinciaSeleccionada;
+
+
+                        // Llamar al método provincias y pasar el nombre de la comunidad como argumento
+                        ciudades(provinceList.get(position),secondDatabase);
+                    }
+
+                    @Override
+                    public void onNothingSelected(AdapterView<?> parent) {
+                        // Manejar el caso en el que no se seleccione ninguna comunidad
+                    }
+                });
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                // Manejar errores
+            }
+        });
+
+    }
+    public void ciudades(province p,FirebaseDatabase secondDatabase){
+        ArrayList<Town> townList = new ArrayList<>();
+
+        // Obtener la referencia al nodo "comunidades" en la base de datos
+        // Define un ArrayList para almacenar los nombres de las comunidades
+        ArrayList<String> nombreTown = new ArrayList<>();
+        DatabaseReference TownRef = secondDatabase.getReference().child("poblaciones");
+
+        Query query = TownRef.orderByChild("parent_code").equalTo(p.getCode());
+
+        query.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                // Iterar sobre los datos de las provincias
+                for (DataSnapshot provinciaSnapshot : dataSnapshot.getChildren()) {
+                    // Obtener los datos de cada provincia
+                    String parentCode = provinciaSnapshot.child("parent_code").getValue(String.class);
+                    String label = provinciaSnapshot.child("label").getValue(String.class);
+                    String code = provinciaSnapshot.child("code").getValue(String.class);
+
+                    Town town= new Town(code,label,parentCode);
+                    townList.add(town);
+                    nombreTown.add(label);
+
+                }
+                // Ahora que tienes los nombres de las comunidades en el ArrayList, puedes poblar el Spinner
+                Spinner spinnerComunidades = findViewById(R.id.spinner_ciudades);
+
+// Crear un ArrayAdapter para el Spinner utilizando el ArrayList de nombres de comunidades
+                ArrayAdapter<String> adapter = new ArrayAdapter<>(RegistrarRestaurante.this, android.R.layout.simple_spinner_item, nombreTown);
+
+// Especificar el diseño del dropdown del Spinner
+                adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
+// Asignar el ArrayAdapter al Spinner
+                spinnerComunidades.setAdapter(adapter);
+
+                spinnerComunidades.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                    @Override
+                    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                        // Obtener el nombre de la comunidad seleccionada
+                        String ciudaadSeleccionada = nombreTown.get(position);
+
+                        ciudad=ciudaadSeleccionada;
+
+
+                    }
+
+                    @Override
+                    public void onNothingSelected(AdapterView<?> parent) {
+                        // Manejar el caso en el que no se seleccione ninguna comunidad
+                    }
+                });
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                // Manejar errores
+            }
+        });
+    }
+
+
 
     public void rellenarSpinners(){
 
@@ -134,13 +364,14 @@ public class RegistrarRestaurante extends AppCompatActivity {
         //Toast.makeText(RegistrarRestaurante.this,  horast1.get(0), Toast.LENGTH_SHORT).show();
         TextView nombre =  findViewById(R.id.labelNombreRestaurante);
         TextView tipo = findViewById(R.id.labelTipo);
-        TextView ciudad = findViewById(R.id.labelCiudad);
         TextView comensales=findViewById(R.id.labelNumeroComensales);
         Restaurante r= new Restaurante();
         // Crear un objeto restaurante con la información
          r.setNombre(nombre.getText().toString());
          r.setTipo(tipo.getText().toString());
-         r.setCiudad(ciudad.getText().toString());
+         r.setComunidadaAutonoma(this.comunidadAutonoma);
+         r.setProvincia(this.provincia);
+         r.setCiudad(this.ciudad);
          r.setDniUsuario(usuario.getDni());
          r.setImagen(urlImagen);
          r.setComensales(Integer.valueOf(comensales.getText().toString()));
@@ -223,12 +454,12 @@ public class RegistrarRestaurante extends AppCompatActivity {
         }
         numturno++;
         if(numturno==4){
-            botonGuaradarTurno.setEnabled(false);
+            botonGuaradarTurno.setVisibility(View.INVISIBLE);
         }
         if(numturno==3){
-            botonsiguienteTurno.setEnabled(false);
+            botonsiguienteTurno.setVisibility(View.INVISIBLE);
         }
-        botonGuarRestaurante.setEnabled(true);
+        botonGuarRestaurante.setVisibility(View.VISIBLE);
 
 
         TextView t= findViewById(R.id.labeltipoturno);
@@ -240,6 +471,7 @@ public class RegistrarRestaurante extends AppCompatActivity {
         }
         if(numturno==3){
             t.setText("Cena");
+            botonsiguienteTurno.setVisibility(View.INVISIBLE);
         }
         rellenarSpinners();
     }
@@ -255,8 +487,18 @@ public class RegistrarRestaurante extends AppCompatActivity {
     }
     if(numturno==3){
         t.setText("Cena");
-        botonsiguienteTurno.setEnabled(false);
+        botonsiguienteTurno.setVisibility(View.INVISIBLE);
     }
+
+
 rellenarSpinners();
     }
+
+    public void menu(View view){
+        Intent i= new Intent(RegistrarRestaurante.this,verRestaurante.class);
+        i.putExtra("usuario",usuario);
+        startActivity(i);
+    }
+
+
 }

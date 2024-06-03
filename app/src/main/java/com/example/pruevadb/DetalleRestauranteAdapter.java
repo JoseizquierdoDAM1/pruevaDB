@@ -1,5 +1,6 @@
 package com.example.pruevadb;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
@@ -11,8 +12,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DataSnapshot;
@@ -20,6 +23,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.GenericTypeIndicator;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import android.app.Activity;
@@ -37,13 +41,11 @@ public class DetalleRestauranteAdapter extends RecyclerView.Adapter<DetalleResta
 
     Context applicationContext;
     private List<Reserva> reservas;
-    private String idRestaurante;
 
     // Constructor del adaptador
-    public DetalleRestauranteAdapter(Context applicationContext, List<Reserva> reservas, String idRestaurante) {
+    public DetalleRestauranteAdapter(Context applicationContext, List<Reserva> reservas) {
         this.applicationContext = applicationContext;
         this.reservas = reservas;
-        this.idRestaurante = idRestaurante;
     }
 
     @NonNull
@@ -59,11 +61,32 @@ public class DetalleRestauranteAdapter extends RecyclerView.Adapter<DetalleResta
         SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
         String fechaFormateada = sdf.format(reserva.getDia());
 
-        holder.nombreTextView.setText(reserva.getNombreUsuario());
-        holder.diaTextView.setText(fechaFormateada);
-        holder.horaTextView.setText(reserva.getHora());
-        holder.comensalesTextView.setText(String.valueOf(reserva.getComensales()));
+        holder.nomreUsuario.setText(reserva.getNombreUsuario());
+        holder.fechaReservas.setText(fechaFormateada);
+        holder.horaReservas.setText(reserva.getHora());
+        holder.comensalesreservas.setText(String.valueOf(reserva.getComensales()));
 
+
+        DatabaseReference usuariosRef = FirebaseDatabase.getInstance().getReference("Usuarios").child(reserva.getIdUsuario());
+
+        usuariosRef.addListenerForSingleValueEvent(new ValueEventListener() {
+           @Override
+           public void onDataChange(@NonNull DataSnapshot snapshot) {
+               String urlImagen = snapshot.child("urlImagen").getValue(String.class);
+               if(urlImagen!=null) {
+                   Glide.with(applicationContext).load(urlImagen).into(holder.imageViewmenuReseñas);
+               }
+               else {
+                   Glide.with(applicationContext).load(R.drawable.perfil).into(holder.imageViewmenuReseñas);
+               }
+           }
+
+           @Override
+           public void onCancelled(@NonNull DatabaseError error) {
+
+           }
+       }
+        );
         holder.eliminar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -73,8 +96,10 @@ public class DetalleRestauranteAdapter extends RecyclerView.Adapter<DetalleResta
                 dialogo1.setCancelable(false);
                 dialogo1.setPositiveButton("Confirmar", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialogo1, int id) {
+                        Toast.makeText(applicationContext, String.valueOf(reservas.size()), Toast.LENGTH_SHORT).show();
                         reservas.remove(reserva);
-                        guardarReservas(idRestaurante, reservas);
+                        Toast.makeText(applicationContext, String.valueOf(reservas.size()), Toast.LENGTH_SHORT).show();
+                        guardarReservas(reserva.getIdRestaurante(), reservas);
                         guardarMensaje(reserva);
                         notifyDataSetChanged(); // Actualiza el RecyclerView
                     }
@@ -95,26 +120,27 @@ public class DetalleRestauranteAdapter extends RecyclerView.Adapter<DetalleResta
     }
 
     public static class DetalleRestauranteViewHolder extends RecyclerView.ViewHolder {
-        TextView diaTextView, horaTextView, comensalesTextView, nombreTextView;
-        ImageView eliminar;
+        TextView fechaReservas,horaReservas,comensalesreservas,nomreUsuario;
+        ImageView imageViewmenuReseñas,eliminar;
 
         public DetalleRestauranteViewHolder(@NonNull View itemView) {
             super(itemView);
-            diaTextView = itemView.findViewById(R.id.labeldia);
-            horaTextView = itemView.findViewById(R.id.labelhora);
-            comensalesTextView = itemView.findViewById(R.id.labelcomensales);
-            nombreTextView = itemView.findViewById(R.id.labelnombredetalle);
+            fechaReservas = itemView.findViewById(R.id.fechaReservas);
+            horaReservas = itemView.findViewById(R.id.horaReservas);
+            comensalesreservas = itemView.findViewById(R.id.comensalesreservas);
+            nomreUsuario = itemView.findViewById(R.id.nomreUsuario);
+            imageViewmenuReseñas = itemView.findViewById(R.id.imageViewmenuReseñas);
             eliminar = itemView.findViewById(R.id.eliminar);
         }
     }
 
-    public void guardarReservas(String idRestaurante, List<Reserva> reservas) {
+    public void guardarReservas(String idRestaurante, List<Reserva> reservass) {
         DatabaseReference restauranteRef = FirebaseDatabase.getInstance().getReference("Restaurantes").child(idRestaurante);
-        restauranteRef.child("reservas").setValue(reservas);
+        restauranteRef.child("reservas").setValue(reservass);
     }
 
     public void guardarMensaje(Reserva r) {
-        DatabaseReference usuariosRef = FirebaseDatabase.getInstance().getReference("Usuarios").child(r.getNombreUsuario());
+        DatabaseReference usuariosRef = FirebaseDatabase.getInstance().getReference("Usuarios").child(r.getIdUsuario());
 
         usuariosRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
