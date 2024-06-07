@@ -34,17 +34,6 @@
                         android:onClick="principal"
                         app:srcCompat="@drawable/logo3" />
 
-                    <TextView
-                        android:id="@+id/labelVerNombre"
-                        android:layout_width="153dp"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentEnd="true"
-                        android:layout_alignParentBottom="true"
-                        android:layout_marginEnd="62dp"
-                        android:layout_marginBottom="6dp"
-                        android:shadowColor="#FFFFFF"
-                        android:text="TextView"
-                        android:textColor="#FFFFFF" />
                 </RelativeLayout>
 
             </LinearLayout>

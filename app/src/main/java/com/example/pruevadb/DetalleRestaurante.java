@@ -25,6 +25,7 @@ import java.util.List;
 
 public class DetalleRestaurante extends AppCompatActivity {
     Usuario usuario;
+    Restaurante restaurante;
     private Button reservas;
     private Button Historialreservas;
     @SuppressLint("MissingInflatedId")
@@ -32,29 +33,31 @@ public class DetalleRestaurante extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detalle_restaurante);
-        cargar("reservas",70);
         Intent intent = getIntent();
         usuario = (Usuario) intent.getSerializableExtra("usuario");
-        reservas=findViewById(R.id.reservas);
-        Historialreservas=findViewById(R.id.verHistorialReservas);
+
+        restaurante = (Restaurante) intent.getSerializableExtra("restaurante");
+
+        reservas = findViewById(R.id.reservas);
+        Historialreservas = findViewById(R.id.verHistorialReservas);
+
+        cargar("reservas", 70);
+
     }
-    public void cargar(String valor,int espacio) {
-        DatabaseReference restaurantesRef = FirebaseDatabase.getInstance().getReference("Restaurantes");
+
+    public void cargar(String valor, int espacio) {
+        DatabaseReference restaurantesRef = FirebaseDatabase.getInstance().getReference("Restaurantes").child(restaurante.getId());
 
         restaurantesRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 List<Reserva> reservas = new ArrayList<>();
-                for (DataSnapshot restauranteSnapshot : dataSnapshot.getChildren()) {
-                    // Obtener los datos del restaurante del snapshot
-                    GenericTypeIndicator<ArrayList<Reserva>> genericTypeIndicator = new GenericTypeIndicator<ArrayList<Reserva>>() {};
-                    List<Reserva> reservasRestaurante = restauranteSnapshot.child(valor).getValue(genericTypeIndicator);
-                    if (reservasRestaurante != null) {
-                        reservas.addAll(reservasRestaurante);
-                    }
+                GenericTypeIndicator<ArrayList<Reserva>> genericTypeIndicator = new GenericTypeIndicator<ArrayList<Reserva>>() {};
+                List<Reserva> reservasRestaurante = dataSnapshot.child(valor).getValue(genericTypeIndicator);
+                if (reservasRestaurante != null) {
+                    reservas.addAll(reservasRestaurante);
                 }
 
-                // Ordenar la lista de reservas por fecha ascendente
                 Collections.sort(reservas, new Comparator<Reserva>() {
                     @Override
                     public int compare(Reserva reserva1, Reserva reserva2) {
@@ -62,9 +65,8 @@ public class DetalleRestaurante extends AppCompatActivity {
                     }
                 });
 
-                // Inicializar el RecyclerView y configurar el adaptador
                 RecyclerView recyclerView = findViewById(R.id.recyclermenuReseñas);
-                DetalleRestauranteAdapter adapter = new DetalleRestauranteAdapter(DetalleRestaurante.this, reservas,valor);
+                DetalleRestauranteAdapter adapter = new DetalleRestauranteAdapter(DetalleRestaurante.this, reservas, valor);
                 recyclerView.addItemDecoration(new SpaceItemDecoration(espacio));
                 recyclerView.setLayoutManager(new LinearLayoutManager(DetalleRestaurante.this));
                 recyclerView.setAdapter(adapter);
@@ -73,29 +75,25 @@ public class DetalleRestaurante extends AppCompatActivity {
             @Override
             public void onCancelled(DatabaseError databaseError) {
                 // Manejar errores de Firebase
-                Toast.makeText(DetalleRestaurante.this, "Error al cargar los datos de los restaurantes", Toast.LENGTH_SHORT).show();
             }
         });
     }
 
-
     public void reservas(View view) {
         reservas.setVisibility(View.INVISIBLE);
         Historialreservas.setVisibility(View.VISIBLE);
-        cargar("reservas",0);
+        cargar("reservas", 0);
     }
 
     public void HistorialReserva(View view) {
         reservas.setVisibility(View.VISIBLE);
         Historialreservas.setVisibility(View.INVISIBLE);
-        cargar("historialReservas",0);
+        cargar("historialReservas", 0);
     }
 
-    public void principal(View view){
-        Intent i= new Intent(DetalleRestaurante.this,verRestaurante.class);
-        i.putExtra("usuario",usuario);
+    public void principal(View view) {
+        Intent i = new Intent(DetalleRestaurante.this, verRestaurante.class);
+        i.putExtra("usuario", usuario);
         startActivity(i);
     }
-
-
 }

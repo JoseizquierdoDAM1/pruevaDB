@@ -95,14 +95,12 @@ public class RestauranteAdapter extends RecyclerView.Adapter<RestauranteAdapter.
                 //.error(R.drawable.error_image) // Imagen de error en caso de fallo
                 .into(holder.imagenImageView);
 
-
         holder.button7.setOnClickListener(view -> {
             Context context = view.getContext();
             Restaurante restauranteSeleccionado = restaurantes.get(holder.getAdapterPosition());
             Intent intent = new Intent(context, DetalleRestaurante.class);
             intent.putExtra("restaurante", restauranteSeleccionado);
             intent.putExtra("usuario", usuario);
-            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             context.startActivity(intent);
         });
 
