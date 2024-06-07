@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/rounded_corners"
-    tools:context=".RegistrarRestaurante">
+    tools:context=".EditarRestaurante">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -19,7 +19,7 @@
             android:orientation="vertical">
 
             <ImageView
-                android:id="@+id/imageView4"
+                android:id="@+id/imagenbaner"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:onClick="menu"
@@ -37,13 +37,13 @@
                 android:layout_width="match_parent"
                 android:layout_height="30dp"
                 android:layout_marginTop="10dp"
-                android:text="Registrar Restaurante"
+                android:text="Editar Restaurante"
                 android:textAlignment="center"
                 android:textSize="24sp"
                 android:textStyle="bold" />
 
             <EditText
-                android:id="@+id/labelNombreRestaurante"
+                android:id="@+id/labelNombreRestauranteEditar"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="15dp"
@@ -54,7 +54,7 @@
                 android:padding="11dp" />
 
             <EditText
-                android:id="@+id/labelTipo"
+                android:id="@+id/labelTipoEditar"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
@@ -65,7 +65,7 @@
                 android:padding="11dp" />
 
             <EditText
-                android:id="@+id/labelNumeroComensales"
+                android:id="@+id/labelNumeroComensalesEditar"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
@@ -77,142 +77,226 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="72dp"
+                android:layout_height="wrap_content"
                 android:layout_marginTop="6dp"
                 android:orientation="horizontal">
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
                     android:orientation="vertical">
 
                     <LinearLayout
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1.7"
-                        android:orientation="vertical">
+                        android:layout_height="72dp"
+                        android:layout_marginTop="6dp"
+                        android:orientation="horizontal">
 
-                        <TextView
-                            android:id="@+id/textView3"
+                        <LinearLayout
                             android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:text="Comunidad A."
-                            android:textAlignment="center"
-                            android:textSize="18sp"
-                            android:textStyle="bold" />
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:orientation="vertical">
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:layout_weight="1.7"
+                                android:orientation="vertical">
+
+                                <TextView
+                                    android:id="@+id/textView3"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:text="Comunidad A."
+                                    android:textAlignment="center"
+                                    android:textSize="18sp"
+                                    android:textStyle="bold" />
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:layout_weight="1"
+                                android:orientation="vertical">
+
+                                <Spinner
+                                    android:id="@+id/spinner_comunidadesEditar"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:background="@drawable/rounded_corners"
+                                    android:padding="11dp" />
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:layout_weight="2.8"
+                                android:orientation="vertical"></LinearLayout>
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:orientation="vertical">
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:layout_weight="1.7"
+                                android:orientation="vertical">
+
+                                <TextView
+                                    android:id="@+id/textView11"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:text="Provincia"
+                                    android:textAlignment="center"
+                                    android:textSize="18sp"
+                                    android:textStyle="bold" />
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:layout_weight="1"
+                                android:orientation="vertical">
+
+                                <Spinner
+                                    android:id="@+id/spinner_provinciasEditar"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:background="@drawable/rounded_corners"
+                                    android:padding="11dp" />
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:layout_weight="2.8"
+                                android:orientation="vertical"></LinearLayout>
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:orientation="vertical">
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:layout_weight="1.7"
+                                android:orientation="vertical">
+
+                                <TextView
+                                    android:id="@+id/textView5"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:text="Ciudad"
+                                    android:textAlignment="center"
+                                    android:textSize="18sp"
+                                    android:textStyle="bold" />
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:layout_weight="1"
+                                android:orientation="vertical">
+
+                                <Spinner
+                                    android:id="@+id/spinner_ciudadesEditar"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:background="@drawable/rounded_corners"
+                                    android:padding="11dp" />
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:layout_weight="2.8"
+                                android:orientation="vertical"></LinearLayout>
+                        </LinearLayout>
+
                     </LinearLayout>
 
                     <LinearLayout
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"
+                        android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:orientation="vertical">
+                        android:orientation="vertical"
+                        android:visibility="visible">
 
-                        <Spinner
-                            android:id="@+id/spinner_comunidades"
+                        <LinearLayout
                             android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:background="@drawable/rounded_corners"
-                            android:padding="11dp" />
-                    </LinearLayout>
+                            android:layout_height="match_parent"
+                            android:orientation="horizontal">
 
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_weight="2.8"
-                        android:orientation="vertical"></LinearLayout>
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:layout_weight="1"
+                                android:orientation="vertical"></LinearLayout>
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:layout_weight="1"
+                                android:orientation="vertical">
+
+                                <LinearLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent"
+                                    android:orientation="vertical">
+
+                                    <LinearLayout
+                                        android:layout_width="match_parent"
+                                        android:layout_height="match_parent"
+                                        android:layout_weight="8"
+                                        android:orientation="vertical"></LinearLayout>
+
+                                    <LinearLayout
+                                        android:layout_width="match_parent"
+                                        android:layout_height="match_parent"
+                                        android:layout_weight="1"
+                                        android:orientation="vertical">
+
+                                        <androidx.appcompat.widget.AppCompatButton
+                                            android:id="@+id/button3"
+                                            android:layout_width="match_parent"
+                                            android:layout_height="wrap_content"
+                                            android:background="@drawable/rounded_button"
+                                            android:onClick="rellenarCiudad"
+                                            android:text="Cambiar ciudad"
+                                            android:textColor="#FFFFFF" />
+                                    </LinearLayout>
+
+                                    <LinearLayout
+                                        android:layout_width="match_parent"
+                                        android:layout_height="match_parent"
+                                        android:layout_weight="8"
+                                        android:orientation="vertical"></LinearLayout>
+                                </LinearLayout>
+
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:layout_weight="1"
+                                android:orientation="vertical"></LinearLayout>
+                        </LinearLayout>
+
+                    </LinearLayout>
                 </LinearLayout>
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:orientation="vertical">
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1.7"
-                        android:orientation="vertical">
-
-                        <TextView
-                            android:id="@+id/textView11"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:text="Provincia"
-                            android:textAlignment="center"
-                            android:textSize="18sp"
-                            android:textStyle="bold" />
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1"
-                        android:orientation="vertical">
-
-                        <Spinner
-                            android:id="@+id/spinner_provincias"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:background="@drawable/rounded_corners"
-                            android:padding="11dp" />
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_weight="2.8"
-                        android:orientation="vertical"></LinearLayout>
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:orientation="vertical">
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1.7"
-                        android:orientation="vertical">
-
-                        <TextView
-                            android:id="@+id/textView5"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:text="Ciudad"
-                            android:textAlignment="center"
-                            android:textSize="18sp"
-                            android:textStyle="bold" />
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1"
-                        android:orientation="vertical">
-
-                        <Spinner
-                            android:id="@+id/spinner_ciudades"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:background="@drawable/rounded_corners"
-                            android:padding="11dp" />
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_weight="2.8"
-                        android:orientation="vertical"></LinearLayout>
-                </LinearLayout>
             </LinearLayout>
 
             <TextView
-                android:id="@+id/labeltipoturno"
+                android:id="@+id/labeltipoturnoEditar"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
@@ -254,7 +338,7 @@
                         android:orientation="vertical">
 
                         <Spinner
-                            android:id="@+id/spinnerHoraInicio"
+                            android:id="@+id/spinnerHoraInicioEditar"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:background="@drawable/rounded_corners"
@@ -296,7 +380,7 @@
                         android:orientation="vertical">
 
                         <Spinner
-                            android:id="@+id/spinnerHoraFin"
+                            android:id="@+id/spinnerHoraFinEditar"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:background="@drawable/rounded_corners"
@@ -345,7 +429,7 @@
                         android:orientation="vertical">
 
                         <Spinner
-                            android:id="@+id/intervalo"
+                            android:id="@+id/intervaloEditar"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:background="@drawable/rounded_corners"
@@ -388,7 +472,7 @@
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
-                            android:layout_weight="1.7"
+                            android:layout_weight="8"
                             android:orientation="vertical"></LinearLayout>
 
                         <LinearLayout
@@ -398,20 +482,57 @@
                             android:orientation="vertical">
 
                             <androidx.appcompat.widget.AppCompatButton
-                                android:id="@+id/button2"
+                                android:id="@+id/siguienteTurno"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:background="@drawable/rounded_button"
-                                android:onClick="siguienteTurno"
-                                android:text="Siguiente turno"
+                                android:onClick="siguienteTurnoEditar"
+                                android:text="siguiente turno"
                                 android:textColor="#FFFFFF" />
                         </LinearLayout>
 
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
-                            android:layout_weight="1.7"
+                            android:layout_weight="8"
                             android:orientation="vertical"></LinearLayout>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1.8"
+                        android:orientation="vertical"></LinearLayout>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1.8"
+                        android:orientation="vertical"></LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <androidx.appcompat.widget.AppCompatButton
+                            android:id="@+id/botonSubir"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:background="@drawable/rounded_button"
+                            android:onClick="subir"
+                            android:text="guardar restaurante"
+                            android:textColor="#FFFFFF"
+                            android:visibility="visible" />
                     </LinearLayout>
 
                     <LinearLayout
@@ -444,7 +565,7 @@
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
-                            android:layout_weight="1.7"
+                            android:layout_weight="8"
                             android:orientation="vertical"></LinearLayout>
 
                         <LinearLayout
@@ -466,7 +587,7 @@
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
-                            android:layout_weight="1.7"
+                            android:layout_weight="8"
                             android:orientation="vertical"></LinearLayout>
                     </LinearLayout>
 
@@ -478,67 +599,6 @@
                 </LinearLayout>
             </LinearLayout>
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="41dp"
-                android:orientation="horizontal">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1.6"
-                    android:orientation="vertical"></LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:orientation="vertical">
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1"
-                        android:orientation="horizontal">
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:layout_weight="2.3"
-                            android:orientation="vertical"></LinearLayout>
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:layout_weight="1"
-                            android:orientation="vertical">
-
-                            <androidx.appcompat.widget.AppCompatButton
-                                android:id="@+id/botonSubir"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:background="@drawable/rounded_button"
-                                android:onClick="subir"
-                                android:text="guardar restaurante"
-                                android:textColor="#FFFFFF"
-                                android:visibility="invisible" />
-                        </LinearLayout>
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:layout_weight="2.3"
-                            android:orientation="vertical"></LinearLayout>
-                    </LinearLayout>
-
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1.6"
-                    android:orientation="vertical"/>
-            </LinearLayout>
         </LinearLayout>
     </LinearLayout>
 

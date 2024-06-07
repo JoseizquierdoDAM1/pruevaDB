@@ -17,6 +17,7 @@ public class Restaurante implements Serializable{
     private int Comensales;
     private int valoracion;
     private ArrayList<Reserva>reservas;
+    private ArrayList<Reserva>historialReservas;
     private ArrayList<String>horastdesayuno;
     private ArrayList<String>horastcomida;
     private ArrayList<String>horastcena;
@@ -168,5 +169,13 @@ public class Restaurante implements Serializable{
 
     public void setProvincia(String provincia) {
         this.provincia = provincia;
+    }
+
+    public ArrayList<Reserva> getHistorialReservas() {
+        return historialReservas;
+    }
+
+    public void setHistorialReservas(ArrayList<Reserva> historialReservas) {
+        this.historialReservas = historialReservas;
     }
 }

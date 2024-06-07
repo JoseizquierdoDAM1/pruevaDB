@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Define el padding para el ImageView en el AlertDialog -->
+    <dimen name="alert_dialog_padding">16dp</dimen>
+    <dimen name="max_image_width">10dp</dimen>
+    <dimen name="max_image_height">10dp</dimen>
+</resources>
+
+
+

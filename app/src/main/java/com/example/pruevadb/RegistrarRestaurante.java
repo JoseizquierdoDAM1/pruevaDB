@@ -12,6 +12,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -324,9 +325,17 @@ public class RegistrarRestaurante extends AppCompatActivity {
     }
 
     public void subir(View view) {
-        Intent intent = new Intent(Intent.ACTION_PICK);
-        intent.setType("image/*");
-        startActivityForResult(intent, GALLERY_INTENT);
+        EditText nombre =  findViewById(R.id.labelNombreRestaurante);
+        EditText tipo = findViewById(R.id.labelTipo);
+        EditText comensales=findViewById(R.id.labelNumeroComensales);
+        if(nombre.getText().toString().equals("")||tipo.getText().toString().equals("")||comensales.getText().toString().equals("")){
+            Toast.makeText(RegistrarRestaurante.this, "Tienes que rellenar todos los campos", Toast.LENGTH_SHORT).show();
+        }else{
+            Intent intent = new Intent(Intent.ACTION_PICK);
+            intent.setType("image/*");
+            startActivityForResult(intent, GALLERY_INTENT);
+        }
+
     }
 
     @Override
@@ -362,9 +371,9 @@ public class RegistrarRestaurante extends AppCompatActivity {
     public void guardarEnFirestore() {
 
         //Toast.makeText(RegistrarRestaurante.this,  horast1.get(0), Toast.LENGTH_SHORT).show();
-        TextView nombre =  findViewById(R.id.labelNombreRestaurante);
-        TextView tipo = findViewById(R.id.labelTipo);
-        TextView comensales=findViewById(R.id.labelNumeroComensales);
+        EditText nombre =  findViewById(R.id.labelNombreRestaurante);
+        EditText tipo = findViewById(R.id.labelTipo);
+        EditText comensales=findViewById(R.id.labelNumeroComensales);
         Restaurante r= new Restaurante();
         // Crear un objeto restaurante con la información
          r.setNombre(nombre.getText().toString());
@@ -422,58 +431,62 @@ public class RegistrarRestaurante extends AppCompatActivity {
     public void guardarTurno(View view) {
         String horaInicios = (String) horaInicio.getSelectedItem();
         String horaFins = (String) horaFin.getSelectedItem(); // Acceder al spinner correcto
-        try {
-            int inicio = Integer.valueOf(horaInicios);
-            int fin = Integer.valueOf(horaFins);
-            if(numturno==1){
-            for (int i = inicio; i <= fin; i++) { // Iterar desde inicio (inclusivo) hasta fin (exclusivo)
-                horastdesalluno.add(String.format("%02d:00", i)); // Usar String.format para un formato consistente
-            }
-           numturnos=1;
-            turnos.add("Desayuno");
-            }
-
-            if(numturno==2){
-                for (int i = inicio; i <= fin; i++) { // Iterar desde inicio (inclusivo) hasta fin (exclusivo)
-                    horastcomida.add(String.format("%02d:00", i)); // Usar String.format para un formato consistente
+        if(horaInicios.equals("0")&&horaFins.equals("0")) {
+            Toast.makeText(RegistrarRestaurante.this, "para guardar el turno tienes que seleccionar una hora", Toast.LENGTH_SHORT).show();
+        }else{
+            try {
+                int inicio = Integer.valueOf(horaInicios);
+                int fin = Integer.valueOf(horaFins);
+                if (numturno == 1) {
+                    for (int i = inicio; i <= fin; i++) { // Iterar desde inicio (inclusivo) hasta fin (exclusivo)
+                        horastdesalluno.add(String.format("%02d:00", i)); // Usar String.format para un formato consistente
+                    }
+                    numturnos = 1;
+                    turnos.add("Desayuno");
                 }
-                numturnos=Integer.valueOf(numturnos+"2");
-                turnos.add("Comida");
-            }
 
-            if(numturno==3){
-                for (int i = inicio; i <= fin; i++) { // Iterar desde inicio (inclusivo) hasta fin (exclusivo)
-                    horastcena.add(String.format("%02d:00", i)); // Usar String.format para un formato consistente
+                if (numturno == 2) {
+                    for (int i = inicio; i <= fin; i++) { // Iterar desde inicio (inclusivo) hasta fin (exclusivo)
+                        horastcomida.add(String.format("%02d:00", i)); // Usar String.format para un formato consistente
+                    }
+                    numturnos = Integer.valueOf(numturnos + "2");
+                    turnos.add("Comida");
                 }
-                numturnos=Integer.valueOf(numturnos+"3");
-                turnos.add("Cena");
+
+                if (numturno == 3) {
+                    for (int i = inicio; i <= fin; i++) { // Iterar desde inicio (inclusivo) hasta fin (exclusivo)
+                        horastcena.add(String.format("%02d:00", i)); // Usar String.format para un formato consistente
+                    }
+                    numturnos = Integer.valueOf(numturnos + "3");
+                    turnos.add("Cena");
+                }
+            } catch (NumberFormatException e) {
+                // Manejar la excepción potencial si se seleccionan valores no numéricos
+                Toast.makeText(this, "Error: Formato de hora inválido", Toast.LENGTH_SHORT).show();
             }
-        } catch (NumberFormatException e) {
-            // Manejar la excepción potencial si se seleccionan valores no numéricos
-            Toast.makeText(this, "Error: Formato de hora inválido", Toast.LENGTH_SHORT).show();
-        }
-        numturno++;
-        if(numturno==4){
-            botonGuaradarTurno.setVisibility(View.INVISIBLE);
-        }
-        if(numturno==3){
-            botonsiguienteTurno.setVisibility(View.INVISIBLE);
-        }
-        botonGuarRestaurante.setVisibility(View.VISIBLE);
+            numturno++;
+            if (numturno == 4) {
+                botonGuaradarTurno.setVisibility(View.INVISIBLE);
+            }
+            if (numturno == 3) {
+                botonsiguienteTurno.setVisibility(View.INVISIBLE);
+            }
+            botonGuarRestaurante.setVisibility(View.VISIBLE);
 
 
-        TextView t= findViewById(R.id.labeltipoturno);
-        if(numturno==1){
-            t.setText("Desayuno");
+            TextView t = findViewById(R.id.labeltipoturno);
+            if (numturno == 1) {
+                t.setText("Desayuno");
+            }
+            if (numturno == 2) {
+                t.setText("Comida");
+            }
+            if (numturno == 3) {
+                t.setText("Cena");
+                botonsiguienteTurno.setVisibility(View.INVISIBLE);
+            }
+            rellenarSpinners();
         }
-        if(numturno==2){
-            t.setText("Comida");
-        }
-        if(numturno==3){
-            t.setText("Cena");
-            botonsiguienteTurno.setVisibility(View.INVISIBLE);
-        }
-        rellenarSpinners();
     }
 
     public void siguienteTurno(View view) {

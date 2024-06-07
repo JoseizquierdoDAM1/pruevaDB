@@ -45,11 +45,18 @@
                             android:layout_height="wrap_content"
                             android:layout_alignParentEnd="true"
                             android:layout_alignParentBottom="true"
-                            android:layout_marginEnd="44dp"
-                            android:layout_marginBottom="7dp"
+                            android:layout_marginEnd="31dp"
+                            android:layout_marginBottom="9dp"
                             android:shadowColor="#FFFFFF"
                             android:text="TextView"
                             android:textColor="#FFFFFF" />
+
+                        <ImageView
+                            android:id="@+id/imageView5"
+                            android:layout_width="26dp"
+                            android:layout_height="28dp"
+                            android:onClick="salir"
+                            app:srcCompat="@drawable/salir" />
                     </RelativeLayout>
 
                 </LinearLayout>

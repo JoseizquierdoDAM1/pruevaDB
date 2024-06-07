@@ -4,7 +4,10 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
 import android.widget.Toast;
 
 import com.google.firebase.database.DataSnapshot;
@@ -20,14 +23,19 @@ import java.util.Comparator;
 import java.util.List;
 
 public class DetalleRestaurante extends AppCompatActivity {
-
+    private Button reservas;
+    private Button Historialreservas;
+    @SuppressLint("MissingInflatedId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detalle_restaurante);
-        cargar();
+        cargar("reservas",70);
+
+        reservas=findViewById(R.id.reservas);
+        Historialreservas=findViewById(R.id.verHistorialReservas);
     }
-    public void cargar() {
+    public void cargar(String valor,int espacio) {
         DatabaseReference restaurantesRef = FirebaseDatabase.getInstance().getReference("Restaurantes");
 
         restaurantesRef.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -37,7 +45,7 @@ public class DetalleRestaurante extends AppCompatActivity {
                 for (DataSnapshot restauranteSnapshot : dataSnapshot.getChildren()) {
                     // Obtener los datos del restaurante del snapshot
                     GenericTypeIndicator<ArrayList<Reserva>> genericTypeIndicator = new GenericTypeIndicator<ArrayList<Reserva>>() {};
-                    List<Reserva> reservasRestaurante = restauranteSnapshot.child("reservas").getValue(genericTypeIndicator);
+                    List<Reserva> reservasRestaurante = restauranteSnapshot.child(valor).getValue(genericTypeIndicator);
                     if (reservasRestaurante != null) {
                         reservas.addAll(reservasRestaurante);
                     }
@@ -53,8 +61,8 @@ public class DetalleRestaurante extends AppCompatActivity {
 
                 // Inicializar el RecyclerView y configurar el adaptador
                 RecyclerView recyclerView = findViewById(R.id.recyclermenuReseñas);
-                DetalleRestauranteAdapter adapter = new DetalleRestauranteAdapter(DetalleRestaurante.this, reservas);
-                recyclerView.addItemDecoration(new SpaceItemDecoration(70));
+                DetalleRestauranteAdapter adapter = new DetalleRestauranteAdapter(DetalleRestaurante.this, reservas,valor);
+                recyclerView.addItemDecoration(new SpaceItemDecoration(espacio));
                 recyclerView.setLayoutManager(new LinearLayoutManager(DetalleRestaurante.this));
                 recyclerView.setAdapter(adapter);
             }
@@ -68,6 +76,17 @@ public class DetalleRestaurante extends AppCompatActivity {
     }
 
 
+    public void reservas(View view) {
+        reservas.setVisibility(View.INVISIBLE);
+        Historialreservas.setVisibility(View.VISIBLE);
+        cargar("reservas",0);
+    }
+
+    public void HistorialReserva(View view) {
+        reservas.setVisibility(View.VISIBLE);
+        Historialreservas.setVisibility(View.INVISIBLE);
+        cargar("historialReservas",0);
+    }
 
 
 }

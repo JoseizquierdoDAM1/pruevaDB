@@ -1,6 +1,5 @@
 package com.example.pruevadb;
 import android.content.Context;
-import android.content.Intent;
 import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
@@ -12,7 +11,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
@@ -23,14 +21,10 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.GenericTypeIndicator;
-import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
-import android.os.Bundle;
-import android.widget.Toast;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -41,11 +35,13 @@ public class DetalleRestauranteAdapter extends RecyclerView.Adapter<DetalleResta
 
     Context applicationContext;
     private List<Reserva> reservas;
+    String tipo;
 
     // Constructor del adaptador
-    public DetalleRestauranteAdapter(Context applicationContext, List<Reserva> reservas) {
+    public DetalleRestauranteAdapter(Context applicationContext, List<Reserva> reservas, String valor) {
         this.applicationContext = applicationContext;
         this.reservas = reservas;
+        this.tipo=valor;
     }
 
     @NonNull
@@ -87,31 +83,37 @@ public class DetalleRestauranteAdapter extends RecyclerView.Adapter<DetalleResta
            }
        }
         );
-        holder.eliminar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                AlertDialog.Builder dialogo1 = new AlertDialog.Builder(applicationContext);
-                dialogo1.setTitle("Alerta");
-                dialogo1.setMessage("¿ Quieres eliminar esta reserva ?");
-                dialogo1.setCancelable(false);
-                dialogo1.setPositiveButton("Confirmar", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialogo1, int id) {
-                        Toast.makeText(applicationContext, String.valueOf(reservas.size()), Toast.LENGTH_SHORT).show();
-                        reservas.remove(reserva);
-                        Toast.makeText(applicationContext, String.valueOf(reservas.size()), Toast.LENGTH_SHORT).show();
-                        guardarReservas(reserva.getIdRestaurante(), reservas);
-                        guardarMensaje(reserva);
-                        notifyDataSetChanged(); // Actualiza el RecyclerView
-                    }
-                });
-                dialogo1.setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialogo1, int id) {
 
-                    }
-                });
-                dialogo1.show();
-            }
-        });
+        if(tipo.equals("reservas")) {
+            holder.eliminar.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    AlertDialog.Builder dialogo1 = new AlertDialog.Builder(applicationContext);
+                    dialogo1.setTitle("Alerta");
+                    dialogo1.setMessage("¿ Quieres eliminar esta reserva ?");
+                    dialogo1.setCancelable(false);
+                    dialogo1.setPositiveButton("Confirmar", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialogo1, int id) {
+                            Toast.makeText(applicationContext, String.valueOf(reservas.size()), Toast.LENGTH_SHORT).show();
+                            reservas.remove(reserva);
+                            Toast.makeText(applicationContext, String.valueOf(reservas.size()), Toast.LENGTH_SHORT).show();
+                            guardarReservas(reserva.getIdRestaurante(), reservas);
+                            guardarMensaje(reserva);
+                            notifyDataSetChanged(); // Actualiza el RecyclerView
+                            guardarHistorial(reserva);
+                        }
+                    });
+                    dialogo1.setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialogo1, int id) {
+
+                        }
+                    });
+                    dialogo1.show();
+                }
+            });
+        }else{
+            holder.eliminar.setVisibility(View.INVISIBLE);
+        }
     }
 
     @Override
@@ -131,12 +133,53 @@ public class DetalleRestauranteAdapter extends RecyclerView.Adapter<DetalleResta
             nomreUsuario = itemView.findViewById(R.id.nomreUsuario);
             imageViewmenuReseñas = itemView.findViewById(R.id.imageViewmenuReseñas);
             eliminar = itemView.findViewById(R.id.eliminar);
+
         }
     }
 
     public void guardarReservas(String idRestaurante, List<Reserva> reservass) {
         DatabaseReference restauranteRef = FirebaseDatabase.getInstance().getReference("Restaurantes").child(idRestaurante);
         restauranteRef.child("reservas").setValue(reservass);
+
+    }
+
+    public void guardarHistorial(Reserva reserva) {
+        String idRestaurante = reserva.getIdRestaurante();
+        if (idRestaurante == null || idRestaurante.isEmpty()) {
+            Toast.makeText(applicationContext, "ID de restaurante no válido", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        DatabaseReference restaurantesRef = FirebaseDatabase.getInstance().getReference("Restaurantes").child(idRestaurante);
+
+        restaurantesRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                GenericTypeIndicator<ArrayList<Reserva>> genericTypeIndicator = new GenericTypeIndicator<ArrayList<Reserva>>() {};
+                List<Reserva> reservas = snapshot.child("historialReservas").getValue(genericTypeIndicator);
+                if (reservas == null) {
+                    Toast.makeText(applicationContext, "Reservas es null", Toast.LENGTH_SHORT).show();
+                    reservas = new ArrayList<>();
+                }
+                reservas.add(reserva);
+                Toast.makeText(applicationContext, "Después: " + reservas.size(), Toast.LENGTH_SHORT).show();
+
+                // Asegúrate de que la referencia del nodo es la correcta
+                DatabaseReference restauranteRef = FirebaseDatabase.getInstance().getReference("Restaurantes").child(idRestaurante);
+                restauranteRef.child("historialReservas").setValue(reservas).addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        Toast.makeText(applicationContext, "Historial guardado correctamente", Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(applicationContext, "Error al guardar historial", Toast.LENGTH_SHORT).show();
+                    }
+                });
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Toast.makeText(applicationContext, "Error en la consulta: " + error.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     public void guardarMensaje(Reserva r) {

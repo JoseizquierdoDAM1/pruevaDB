@@ -106,6 +106,12 @@ public class verRestaurante extends AppCompatActivity {
     }
 
 
+    public void salir(View view){
+        Intent i = new Intent(verRestaurante.this, MainActivity.class);
+        startActivity(i);
+    }
+
+
 
 
 

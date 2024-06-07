@@ -12,6 +12,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
@@ -114,6 +115,40 @@ public class RestauranteAdapter extends RecyclerView.Adapter<RestauranteAdapter.
             context.startActivity(intent);
 
         });
+
+        holder.editar.setOnClickListener(view -> {
+            Context context = view.getContext();
+            Restaurante restauranteSeleccionado = restaurantes.get(holder.getAdapterPosition());
+            Intent intent = new Intent(context, EditarRestaurante.class);
+            intent.putExtra("restaurante", restauranteSeleccionado);
+            intent.putExtra("usuario", usuario);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            context.startActivity(intent);
+
+        });
+
+        holder.eliminarRestaurante.setOnClickListener(view -> {
+            DatabaseReference restauranteRef = FirebaseDatabase.getInstance().getReference("Restaurantes").child(restaurante.getId());
+
+            restauranteRef.removeValue(new DatabaseReference.CompletionListener() {
+                @Override
+                public void onComplete(@Nullable DatabaseError error, @NonNull DatabaseReference ref) {
+                    if (error == null) {
+                        Context context = view.getContext();
+                        Restaurante restauranteSeleccionado = restaurantes.get(holder.getAdapterPosition());
+                        Intent intent = new Intent(context, verRestaurante.class);
+                        intent.putExtra("restaurante", restauranteSeleccionado);
+                        intent.putExtra("usuario", usuario);
+                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        context.startActivity(intent);
+                    } else {
+                        // Hubo un error al intentar eliminar el restaurante
+                        Toast.makeText(applicationContext,"No se ha podido eliminar el restaurante", Toast.LENGTH_SHORT).show();
+                        // Aquí puedes manejar el error de acuerdo a tu lógica de la aplicación
+                    }
+                }
+            });
+        });
     }
 
     @Override
@@ -122,8 +157,8 @@ public class RestauranteAdapter extends RecyclerView.Adapter<RestauranteAdapter.
     }
 
     public static class RestauranteViewHolder extends RecyclerView.ViewHolder {
-        ImageView imagenImageView;
-        ImageView ell1,ell2,ell3,ell4,ell5;;
+        ImageView imagenImageView,editar,eliminarRestaurante;
+        ImageView ell1,ell2,ell3,ell4,ell5;
 
         TextView nombreTextView, tipoTextView, ciudadTextView;
         Button button7,buttonreseñas;
@@ -136,12 +171,14 @@ public class RestauranteAdapter extends RecyclerView.Adapter<RestauranteAdapter.
             imagenImageView = itemView.findViewById(R.id.imagenRecycler);
             button7 = itemView.findViewById(R.id.button7);
             buttonreseñas=itemView.findViewById(R.id.buttonreseñas);
-
+            editar = itemView.findViewById(R.id.editar);
             ell1=itemView.findViewById(R.id.ell1);
             ell2=itemView.findViewById(R.id.ell2);
             ell3=itemView.findViewById(R.id.ell3);
             ell4=itemView.findViewById(R.id.ell4);
             ell5=itemView.findViewById(R.id.ell5);
+            eliminarRestaurante=itemView.findViewById(R.id.eliminarRestaurante);
+
         }
     }
 }
