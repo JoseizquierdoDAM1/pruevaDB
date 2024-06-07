@@ -1,6 +1,8 @@
 package com.example.pruevadb;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -128,26 +130,40 @@ public class RestauranteAdapter extends RecyclerView.Adapter<RestauranteAdapter.
         });
 
         holder.eliminarRestaurante.setOnClickListener(view -> {
-            DatabaseReference restauranteRef = FirebaseDatabase.getInstance().getReference("Restaurantes").child(restaurante.getId());
+            AlertDialog.Builder dialogo1 = new AlertDialog.Builder(applicationContext);
+            dialogo1.setTitle("Alerta");
+            dialogo1.setMessage("¿ Esas seguro de querer eliminar el restaurante ?");
+            dialogo1.setCancelable(false);
+            dialogo1.setPositiveButton("Confirmar", new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialogo1, int id) {
+                    DatabaseReference restauranteRef = FirebaseDatabase.getInstance().getReference("Restaurantes").child(restaurante.getId());
 
-            restauranteRef.removeValue(new DatabaseReference.CompletionListener() {
-                @Override
-                public void onComplete(@Nullable DatabaseError error, @NonNull DatabaseReference ref) {
-                    if (error == null) {
-                        Context context = view.getContext();
-                        Restaurante restauranteSeleccionado = restaurantes.get(holder.getAdapterPosition());
-                        Intent intent = new Intent(context, verRestaurante.class);
-                        intent.putExtra("restaurante", restauranteSeleccionado);
-                        intent.putExtra("usuario", usuario);
-                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                        context.startActivity(intent);
-                    } else {
-                        // Hubo un error al intentar eliminar el restaurante
-                        Toast.makeText(applicationContext,"No se ha podido eliminar el restaurante", Toast.LENGTH_SHORT).show();
-                        // Aquí puedes manejar el error de acuerdo a tu lógica de la aplicación
-                    }
+                    restauranteRef.removeValue(new DatabaseReference.CompletionListener() {
+                        @Override
+                        public void onComplete(@Nullable DatabaseError error, @NonNull DatabaseReference ref) {
+                            if (error == null) {
+                                Context context = view.getContext();
+                                Restaurante restauranteSeleccionado = restaurantes.get(holder.getAdapterPosition());
+                                Intent intent = new Intent(context, verRestaurante.class);
+                                intent.putExtra("restaurante", restauranteSeleccionado);
+                                intent.putExtra("usuario", usuario);
+                                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                context.startActivity(intent);
+                            } else {
+                                // Hubo un error al intentar eliminar el restaurante
+                                Toast.makeText(applicationContext,"No se ha podido eliminar el restaurante", Toast.LENGTH_SHORT).show();
+                                // Aquí puedes manejar el error de acuerdo a tu lógica de la aplicación
+                            }
+                        }
+                    });
                 }
             });
+            dialogo1.setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialogo1, int id) {
+
+                }
+            });
+            dialogo1.show();
         });
     }
 

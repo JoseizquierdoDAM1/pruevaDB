@@ -55,7 +55,6 @@ public class MainActivity extends AppCompatActivity {
                     String dni=usuarioSnapshot.child("dni").getValue(String.class);
                     // Comparar el nombre de usuario y contraseña
                     if (labelnombre.getText().toString().equals(nombre) && contraseña.getText().toString().equals(contraseñaUsuario)) {
-                        Toast.makeText(MainActivity.this, nombre, Toast.LENGTH_SHORT).show();
                         usuarioEncontrado = true;
                         if (tipoUser.equals("dueño")) {
                             aviso.setText("El acceso es correcto para el usuario dueño");

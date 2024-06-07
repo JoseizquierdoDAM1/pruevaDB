@@ -359,7 +359,6 @@ public class RegistrarRestaurante extends AppCompatActivity {
                             guardarEnFirestore();
                         }
                     });
-                    Toast.makeText(RegistrarRestaurante.this, usuario.getDni(), Toast.LENGTH_SHORT).show();
                 }
             });
         }
@@ -370,7 +369,6 @@ public class RegistrarRestaurante extends AppCompatActivity {
 
     public void guardarEnFirestore() {
 
-        //Toast.makeText(RegistrarRestaurante.this,  horast1.get(0), Toast.LENGTH_SHORT).show();
         EditText nombre =  findViewById(R.id.labelNombreRestaurante);
         EditText tipo = findViewById(R.id.labelTipo);
         EditText comensales=findViewById(R.id.labelNumeroComensales);

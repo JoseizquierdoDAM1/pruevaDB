@@ -702,7 +702,6 @@ public class EditarRestaurante extends AppCompatActivity {
 
         DatabaseReference restauranteRef = FirebaseDatabase.getInstance().getReference("Restaurantes").child(r.getId());
 
-        Toast.makeText(EditarRestaurante.this, turnos.size()+" ", Toast.LENGTH_SHORT).show();
         // Guardar el objeto Restaurante directamente en la base de datos
 
         restauranteRef.setValue(r).addOnCompleteListener(task -> {

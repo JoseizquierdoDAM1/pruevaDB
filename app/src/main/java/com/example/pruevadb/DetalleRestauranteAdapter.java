@@ -94,9 +94,7 @@ public class DetalleRestauranteAdapter extends RecyclerView.Adapter<DetalleResta
                     dialogo1.setCancelable(false);
                     dialogo1.setPositiveButton("Confirmar", new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialogo1, int id) {
-                            Toast.makeText(applicationContext, String.valueOf(reservas.size()), Toast.LENGTH_SHORT).show();
                             reservas.remove(reserva);
-                            Toast.makeText(applicationContext, String.valueOf(reservas.size()), Toast.LENGTH_SHORT).show();
                             guardarReservas(reserva.getIdRestaurante(), reservas);
                             guardarMensaje(reserva);
                             notifyDataSetChanged(); // Actualiza el RecyclerView
@@ -158,17 +156,14 @@ public class DetalleRestauranteAdapter extends RecyclerView.Adapter<DetalleResta
                 GenericTypeIndicator<ArrayList<Reserva>> genericTypeIndicator = new GenericTypeIndicator<ArrayList<Reserva>>() {};
                 List<Reserva> reservas = snapshot.child("historialReservas").getValue(genericTypeIndicator);
                 if (reservas == null) {
-                    Toast.makeText(applicationContext, "Reservas es null", Toast.LENGTH_SHORT).show();
                     reservas = new ArrayList<>();
                 }
                 reservas.add(reserva);
-                Toast.makeText(applicationContext, "Después: " + reservas.size(), Toast.LENGTH_SHORT).show();
 
                 // Asegúrate de que la referencia del nodo es la correcta
                 DatabaseReference restauranteRef = FirebaseDatabase.getInstance().getReference("Restaurantes").child(idRestaurante);
                 restauranteRef.child("historialReservas").setValue(reservas).addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
-                        Toast.makeText(applicationContext, "Historial guardado correctamente", Toast.LENGTH_SHORT).show();
                     } else {
                         Toast.makeText(applicationContext, "Error al guardar historial", Toast.LENGTH_SHORT).show();
                     }
@@ -199,8 +194,6 @@ public class DetalleRestauranteAdapter extends RecyclerView.Adapter<DetalleResta
                 String mensaje = "Su reserva para el " + new SimpleDateFormat("dd/MM/yyyy").format(r.getDia()) + " a las " + r.getHora() + " ha sido cancelada";
                 mensajes.add(mensaje);
 
-                // Asegurarse de que el Toast se ejecute en el hilo principal
-                new Handler(Looper.getMainLooper()).post(() -> Toast.makeText(applicationContext, mensaje, Toast.LENGTH_SHORT).show());
 
                 usuariosRef.child("mensajes").setValue(mensajes).addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override

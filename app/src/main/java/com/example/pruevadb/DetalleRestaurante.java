@@ -5,6 +5,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -23,6 +24,7 @@ import java.util.Comparator;
 import java.util.List;
 
 public class DetalleRestaurante extends AppCompatActivity {
+    Usuario usuario;
     private Button reservas;
     private Button Historialreservas;
     @SuppressLint("MissingInflatedId")
@@ -31,7 +33,8 @@ public class DetalleRestaurante extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detalle_restaurante);
         cargar("reservas",70);
-
+        Intent intent = getIntent();
+        usuario = (Usuario) intent.getSerializableExtra("usuario");
         reservas=findViewById(R.id.reservas);
         Historialreservas=findViewById(R.id.verHistorialReservas);
     }
@@ -86,6 +89,12 @@ public class DetalleRestaurante extends AppCompatActivity {
         reservas.setVisibility(View.VISIBLE);
         Historialreservas.setVisibility(View.INVISIBLE);
         cargar("historialReservas",0);
+    }
+
+    public void principal(View view){
+        Intent i= new Intent(DetalleRestaurante.this,verRestaurante.class);
+        i.putExtra("usuario",usuario);
+        startActivity(i);
     }
 
 
